@@ -5,27 +5,26 @@
       v-for="(task, index) in getTasks"
       :key="task.id"
     >
-      <button
-        @click="taskAction('Completed', task)"
-        class="checkMark d-inline-block incompleted-mark"
+      <TaskTypeButton
+        :status="'Completed'"
+        :task="task"
+        :type="'incompleted-mark'"
+        :taskType="'far fa-square'"
         v-if="status === 'Incompleted'"
-      >
-        <i class="far fa-square"></i>
-      </button>
-      <button
-        @click="taskAction('Incompleted', task)"
+      />
+      <TaskTypeButton
+        :task="task"
+        :type="'completed-mark'"
+        :taskType="'fas fa-check-square'"
         v-if="status === 'Completed'"
-        class="checkMark d-inline-block completed-mark"
-      >
-        <i class="fas fa-check-square"></i>
-      </button>
-      <button
-        @click="taskAction('Removed', task)"
+      />
+      <TaskTypeButton
+        :status="'Removed'"
+        :task="task"
+        :type="'removed-mark'"
+        :taskType="'fas fa-undo'"
         v-if="status === 'Removed'"
-        class="checkMark d-inline-block removed-mark"
-      >
-        <i class="fas fa-undo"></i>
-      </button>
+      />
       <span
         v-if="!isTaskEditable(index)"
         class="align-middle task-name-space"
@@ -44,7 +43,7 @@
         </button>
       </div>
       <div
-        class="d-inline-block float-right text-center"
+        class="check-delete-button"
         v-if="status === 'Incompleted' && activeIndex === index"
       >
         <button
@@ -69,9 +68,11 @@
   </div>
 </template>
 <script>
+import TaskTypeButton from "./TaskTypeButton.vue";
 export default {
   name: "TasksList",
   props: ["tasks", "status"],
+  components: { TaskTypeButton },
   computed: {
     getTasks() {
       return this.tasks.filter((item) => item.status == this.status);
@@ -86,19 +87,6 @@ export default {
   methods: {
     editTask(index) {
       this.activeIndex = index;
-    },
-    taskAction(action, task) {
-      if (action === "Removed") {
-        task.status = task.previousStatus;
-      } else if (action === "Delete") {
-        task.previousStatus = task.status;
-        task.status = "Removed";
-      } else if (action === "Undo") {
-        task.status = "Incompleted";
-      } else {
-        task.status = action;
-      }
-      this.$emit("taskAction", task);
     },
     isTaskEditable(index) {
       return this.activeIndex === index;
@@ -191,6 +179,10 @@ export default {
 .edit-task-field:focus {
   height: 2em;
   border-bottom: 3px solid #66679a;
+}
+
+.check-delete-button {
+  display: inline-block;
 }
 
 /* .todo-list:hover {

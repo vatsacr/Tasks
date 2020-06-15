@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: "ActionButton",
+  name: "AddTaskButton",
   props: ["isDisabled", "taskName"],
   data() {
     return {

@@ -6,7 +6,7 @@
       class="new-task-field conjoined-right"
       placeholder="Mow the lawn"
     />
-    <ActionButton
+    <AddTaskButton
       :taskName="taskName"
       :isDisabled="isDisabled"
       @emitTaskName="receiveTask"
@@ -16,10 +16,10 @@
 </template>
 
 <script>
-import ActionButton from "./ActionButton.vue";
+import AddTaskButton from "./AddTaskButton.vue";
 export default {
   name: "NewTask",
-  components: { ActionButton },
+  components: { AddTaskButton },
   data() {
     return {
       taskName: "",
