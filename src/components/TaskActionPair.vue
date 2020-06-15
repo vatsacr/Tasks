@@ -1,17 +1,16 @@
 <template>
-  <div
-    class="d-inline-block float-right text-center"
-    v-if="status === 'Incompleted' && activeIndex === null"
-  >
-    <button class="edit-btn mr-2" @click="editTask(index)">
-      <i class="fas fa-edit"></i>
+  <div class="d-inline-block float-right text-center">
+    <button class="edit-btn mr-2">
+      <i :class="actionType[0]"></i>
     </button>
-    <button class="remove-btn" @click="taskAction('Delete', task)">
-      <i class="fas fa-trash"></i>
+    <button class="remove-btn">
+      <i :class="actionType[1]"></i>
     </button>
   </div>
 </template>
 <script>
-export default {};
+export default {
+  props:["actionType"],
+};
 </script>
 <style></style>

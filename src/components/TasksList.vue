@@ -1,10 +1,6 @@
 <template>
   <div class="todo-tasks p-2">
-    <div
-      class="todo-list-item p-2"
-      v-for="(task, index) in getTasks"
-      :key="task.id"
-    >
+    <div class="todo-list-item p-2" v-for="(task, index) in getTasks" :key="task.id">
       <TaskTypeButton
         :status="'Completed'"
         :task="task"
@@ -25,12 +21,10 @@
         :taskType="'fas fa-undo'"
         v-if="status === 'Removed'"
       />
-      <span
-        v-if="!isTaskEditable(index)"
-        class="align-middle task-name-space"
-        >{{ task.name }}</span
-      >
+      <span v-if="!isTaskEditable(index)" class="align-middle task-name-space">{{ task.name }}</span>
       <input v-else v-model="task.name" class="edit-task-field" />
+      <TaskActionPair v-if="status === 'Incompleted'" :actionType="['fas fa-edit','fas fa-trash']" />
+      <TaskActionPair v-if="status === 'Completed'" :actionType="['fas fa-trash','']" />
       <div
         class="d-inline-block float-right text-center"
         v-if="status === 'Incompleted' && activeIndex === null"
@@ -42,24 +36,15 @@
           <i class="fas fa-trash"></i>
         </button>
       </div>
-      <div
-        class="check-delete-button"
-        v-if="status === 'Incompleted' && activeIndex === index"
-      >
-        <button
-          class="edit-btn mr-2 completed-mark"
-          @click="taskAction('Incompleted', task)"
-        >
+      <div class="check-delete-button" v-if="status === 'Incompleted' && activeIndex === index">
+        <button class="edit-btn mr-2 completed-mark" @click="taskAction('Incompleted', task)">
           <i class="fas fa-check"></i>
         </button>
         <button class="remove-btn" @click="activeIndex = null">
           <i class="fas fa-times"></i>
         </button>
       </div>
-      <div
-        class="d-inline-block float-right text-center"
-        v-if="status === 'Completed'"
-      >
+      <div class="d-inline-block float-right text-center" v-if="status === 'Completed'">
         <button class="remove-btn" @click="taskAction('Delete', task)">
           <i class="fas fa-trash"></i>
         </button>
@@ -69,19 +54,20 @@
 </template>
 <script>
 import TaskTypeButton from "./TaskTypeButton.vue";
+import TaskActionPair from "./TaskActionPair.vue";
 export default {
   name: "TasksList",
   props: ["tasks", "status"],
-  components: { TaskTypeButton },
+  components: { TaskTypeButton, TaskActionPair },
   computed: {
     getTasks() {
-      return this.tasks.filter((item) => item.status == this.status);
-    },
+      return this.tasks.filter(item => item.status == this.status);
+    }
   },
   data() {
     return {
       checked: false,
-      activeIndex: null,
+      activeIndex: null
     };
   },
   methods: {
@@ -90,8 +76,8 @@ export default {
     },
     isTaskEditable(index) {
       return this.activeIndex === index;
-    },
-  },
+    }
+  }
 };
 </script>
 <style>

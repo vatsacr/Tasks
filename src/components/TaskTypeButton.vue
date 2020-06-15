@@ -1,9 +1,5 @@
 <template>
-  <button
-    @click="taskAction(status, task)"
-    class="checkMark d-inline-block"
-    :class="type"
-  >
+  <button @click="taskAction(status, task)" class="checkMark d-inline-block" :class="type">
     <i :class="taskType"></i>
   </button>
 </template>
@@ -22,7 +18,7 @@ export default {
       } else {
         task.status = action;
       }
-    },
-  },
+    }
+  }
 };
 </script>
