@@ -174,8 +174,4 @@ export default {
 .check-delete-button {
   display: inline-block;
 }
-
-/* .todo-list:hover {
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-} */
 </style>
