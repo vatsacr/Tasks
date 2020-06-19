@@ -22,28 +22,23 @@
         v-if="status === 'Removed'"
       />
       <span v-if="!isTaskEditable(index)" class="align-middle task-name-space">{{ task.name }}</span>
-      <input v-else v-model="task.name" class="edit-task-field" />
-      <TaskActionPair v-if="status === 'Incompleted'" :actionType="['fas fa-edit','fas fa-trash']" />
-      <TaskActionPair v-if="status === 'Completed'" :actionType="['fas fa-trash','']" />
-      <div
-        class="d-inline-block float-right text-center"
-        v-if="status === 'Incompleted' && activeIndex === null"
-      >
-        <button class="edit-btn mr-2" @click="editTask(index)">
-          <i class="fas fa-edit"></i>
-        </button>
-        <button class="remove-btn" @click="taskAction('Delete', task)">
-          <i class="fas fa-trash"></i>
-        </button>
-      </div>
-      <div class="check-delete-button" v-if="status === 'Incompleted' && activeIndex === index">
-        <button class="edit-btn mr-2 completed-mark" @click="taskAction('Incompleted', task)">
-          <i class="fas fa-check"></i>
-        </button>
-        <button class="remove-btn" @click="activeIndex = null">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
+      <input v-else v-model="task.name" class="edit-task-field" @keyup.enter="taskNameChanged" />
+      <TaskActionButton
+        v-if="status === 'Incompleted' && activeIndex !== index"
+        :task="task"
+        :index="index"
+        @doAction="doAction"
+        :buttons="[{type:'fas fa-edit',classStyle:'edit-btn mr-2',actionType: 'edit'},{type:'fas fa-trash',classStyle:'remove-btn',actionType:'delete'}]"
+      />
+      <TaskActionButton
+        v-if="status === 'Incompleted' && activeIndex === index"
+        :task="task"
+        :buttons="[{type:'fas fa-check',classStyle:'edit-btn mr-2 completed-mark',actionType: 'done'},{type:'fas fa-times',classStyle:'remove-btn',actionType:'cancel'}]"
+      />
+      <TaskActionButton
+        v-if="status === 'Completed'"
+        :buttons="[{type:'fas fa-trash',classStyle:'remove-btn',actionType:'delete'}]"
+      />
       <div class="d-inline-block float-right text-center" v-if="status === 'Completed'">
         <button class="remove-btn" @click="taskAction('Delete', task)">
           <i class="fas fa-trash"></i>
@@ -54,11 +49,11 @@
 </template>
 <script>
 import TaskTypeButton from "./TaskTypeButton.vue";
-import TaskActionPair from "./TaskActionPair.vue";
+import TaskActionButton from "./TaskActionButton.vue";
 export default {
   name: "TasksList",
   props: ["tasks", "status"],
-  components: { TaskTypeButton, TaskActionPair },
+  components: { TaskTypeButton, TaskActionButton },
   computed: {
     getTasks() {
       return this.tasks.filter(item => item.status == this.status);
@@ -76,6 +71,12 @@ export default {
     },
     isTaskEditable(index) {
       return this.activeIndex === index;
+    },
+    doAction(task) {
+      this.activeIndex = task.index;
+    },
+    taskNameChanged() {
+      this.activeIndex = null;
     }
   }
 };
@@ -97,6 +98,7 @@ export default {
   width: 55%;
   white-space: nowrap;
   overflow-x: auto;
+  padding: 0 1em;
 }
 
 .remove-btn {
@@ -152,9 +154,8 @@ export default {
 .edit-task-field {
   outline: none;
   padding: 0;
-  height: 1.1em;
+  padding: 0 1em;
   border: none;
-  border-bottom: 1px solid #66679a;
   display: inline-block;
   width: 55%;
   white-space: nowrap;
@@ -162,9 +163,14 @@ export default {
   transition: all 0.2s ease-in-out;
 }
 
+.edit-task-field:after {
+  transform: scale(0, 1);
+  transform-origin: 0% 100%;
+  transition: transform 0.35s;
+}
+
 .edit-task-field:focus {
-  height: 2em;
-  border-bottom: 3px solid #66679a;
+  border: 1px solid #66679a;
 }
 
 .check-delete-button {
