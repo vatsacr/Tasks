@@ -10,6 +10,7 @@
       />
       <TaskTypeButton
         :task="task"
+        :status="'Undo'"
         :type="'completed-mark'"
         :taskType="'fas fa-check-square'"
         v-if="status === 'Completed'"
@@ -33,17 +34,14 @@
       <TaskActionButton
         v-if="status === 'Incompleted' && activeIndex === index"
         :task="task"
+        @doAction="doAction"
         :buttons="[{type:'fas fa-check',classStyle:'edit-btn mr-2 completed-mark',actionType: 'done'},{type:'fas fa-times',classStyle:'remove-btn',actionType:'cancel'}]"
       />
       <TaskActionButton
         v-if="status === 'Completed'"
+        :task="task"
         :buttons="[{type:'fas fa-trash',classStyle:'remove-btn',actionType:'delete'}]"
       />
-      <div class="d-inline-block float-right text-center" v-if="status === 'Completed'">
-        <button class="remove-btn" @click="taskAction('Delete', task)">
-          <i class="fas fa-trash"></i>
-        </button>
-      </div>
     </div>
   </div>
 </template>

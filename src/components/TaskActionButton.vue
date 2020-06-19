@@ -1,5 +1,5 @@
 <template>
-  <div class="d-inline-block">
+  <div class="d-inline-block float-right">
     <button
       :class="button.classStyle"
       v-for="button in buttons"
@@ -21,8 +21,8 @@ export default {
       } else if (action === "cancel" || action === "done") {
         this.$emit("doAction", { type: action, task: task, index: null });
       } else {
-        task.previousStatus = task.status;
-        task.status = "Removed";
+        this.task.previousStatus = task.status;
+        this.task.status = "Removed";
       }
     }
   }
