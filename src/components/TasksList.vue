@@ -1,12 +1,16 @@
 <template>
   <div class="todo-tasks p-2">
-    <div class="todo-list-item p-2" v-for="(task, index) in getTasks" :key="task.id">
+    <div
+      class="todo-list-item p-2"
+      v-for="(task, index) in getTasks"
+      :key="task.id"
+    >
       <TaskTypeButton
         :status="'Completed'"
         :task="task"
         :type="'incompleted-mark'"
         :taskType="'far fa-square'"
-        v-if="status === 'Incompleted'"
+        v-if="status === 'Incomplete'"
       />
       <TaskTypeButton
         :task="task"
@@ -22,25 +26,62 @@
         :taskType="'fas fa-undo'"
         v-if="status === 'Removed'"
       />
-      <span v-if="!isTaskEditable(index)" class="align-middle task-name-space">{{ task.name }}</span>
-      <input v-else v-model="task.name" class="edit-task-field" @keyup.enter="taskNameChanged" />
+      <span
+        v-if="!isTaskEditable(index)"
+        class="align-middle task-name-space"
+        >{{ task.name }}</span
+      >
+      <input
+        v-else
+        v-model="task.name"
+        class="edit-task-field"
+        @keyup.enter="taskNameChanged(task)"
+      />
       <TaskActionButton
-        v-if="status === 'Incompleted' && activeIndex !== index"
+        v-if="status === 'Incomplete' && activeIndex !== index"
         :task="task"
         :index="index"
         @doAction="doAction"
-        :buttons="[{type:'fas fa-edit',classStyle:'edit-btn mr-2',actionType: 'edit'},{type:'fas fa-trash',classStyle:'remove-btn',actionType:'delete'}]"
+        :buttons="[
+          {
+            type: 'fas fa-edit',
+            classStyle: 'edit-btn mr-2',
+            actionType: 'edit',
+          },
+          {
+            type: 'fas fa-trash',
+            classStyle: 'remove-btn',
+            actionType: 'delete',
+          },
+        ]"
       />
       <TaskActionButton
-        v-if="status === 'Incompleted' && activeIndex === index"
+        v-if="status === 'Incomplete' && activeIndex === index"
         :task="task"
         @doAction="doAction"
-        :buttons="[{type:'fas fa-check',classStyle:'edit-btn mr-2 completed-mark',actionType: 'done'},{type:'fas fa-times',classStyle:'remove-btn',actionType:'cancel'}]"
+        :buttons="[
+          {
+            type: 'fas fa-check',
+            classStyle: 'edit-btn mr-2 completed-mark',
+            actionType: 'done',
+          },
+          {
+            type: 'fas fa-times',
+            classStyle: 'remove-btn',
+            actionType: 'cancel',
+          },
+        ]"
       />
       <TaskActionButton
         v-if="status === 'Completed'"
         :task="task"
-        :buttons="[{type:'fas fa-trash',classStyle:'remove-btn',actionType:'delete'}]"
+        :buttons="[
+          {
+            type: 'fas fa-trash',
+            classStyle: 'remove-btn',
+            actionType: 'delete',
+          },
+        ]"
       />
     </div>
   </div>
@@ -48,19 +89,20 @@
 <script>
 import TaskTypeButton from "./TaskTypeButton.vue";
 import TaskActionButton from "./TaskActionButton.vue";
+import TaskService from "../services/TaskService";
 export default {
   name: "TasksList",
   props: ["tasks", "status"],
   components: { TaskTypeButton, TaskActionButton },
   computed: {
     getTasks() {
-      return this.tasks.filter(item => item.status == this.status);
-    }
+      return this.tasks.filter((item) => item.status == this.status);
+    },
   },
   data() {
     return {
       checked: false,
-      activeIndex: null
+      activeIndex: null,
     };
   },
   methods: {
@@ -73,10 +115,13 @@ export default {
     doAction(task) {
       this.activeIndex = task.index;
     },
-    taskNameChanged() {
+    taskNameChanged(task) {
       this.activeIndex = null;
-    }
-  }
+      TaskService.updateTask(task).then(() => {
+        this.$emit("updatedTask", "SUCCESS");
+      });
+    },
+  },
 };
 </script>
 <style>
@@ -159,12 +204,6 @@ export default {
   white-space: nowrap;
   overflow-x: scroll;
   transition: all 0.2s ease-in-out;
-}
-
-.edit-task-field:after {
-  transform: scale(0, 1);
-  transform-origin: 0% 100%;
-  transition: transform 0.35s;
 }
 
 .edit-task-field:focus {

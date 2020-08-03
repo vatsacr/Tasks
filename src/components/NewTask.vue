@@ -42,7 +42,7 @@ export default {
       this.$emit("addOnEnter", {
         id: this.idGen,
         name: this.taskName,
-        status: "Incompleted",
+        status: "Incomplete",
       });
       this.taskName = "";
     },

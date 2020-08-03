@@ -4,7 +4,7 @@
       :class="button.classStyle"
       v-for="button in buttons"
       :key="button.type"
-      @click="sendAction(button.actionType,task)"
+      @click="sendAction(button.actionType, task)"
     >
       <i :class="button.type"></i>
     </button>
@@ -24,10 +24,8 @@ export default {
         this.task.previousStatus = task.status;
         this.task.status = "Removed";
       }
-    }
-  }
+    },
+  },
 };
 </script>
-
-<style>
-</style>
+<style></style>

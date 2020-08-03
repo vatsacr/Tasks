@@ -6,9 +6,10 @@
       <div class="col-xl-4 col-md-4 col-sm-4 col-12">
         <h2 class="mb-0 incompleted">Incomplete</h2>
         <TasksList
-          :status="'Incompleted'"
-          v-if="ifFound('Incompleted')"
+          :status="'Incomplete'"
+          v-if="ifFound('Incomplete')"
           :tasks="tasks"
+          @updatedTask="getUpdatedTasks"
         />
         <div class="todo-tasks p-3" v-else>No tasks to do...</div>
       </div>
@@ -18,6 +19,7 @@
           :status="'Completed'"
           v-if="ifFound('Completed')"
           :tasks="tasks"
+          @updatedTask="getUpdatedTasks"
         />
         <div class="todo-tasks p-3" v-else>No tasks are completed...</div>
       </div>
@@ -27,6 +29,7 @@
           :status="'Removed'"
           v-if="ifFound('Removed')"
           :tasks="tasks"
+          @updatedTask="getUpdatedTasks"
         />
         <div class="todo-tasks p-3" v-else>No tasks are removed...</div>
       </div>
@@ -37,6 +40,7 @@
 <script>
 import NewTask from "./components/NewTask.vue";
 import TasksList from "./components/TasksList.vue";
+import TaskService from "./services/TaskService";
 
 export default {
   name: "App",
@@ -49,17 +53,49 @@ export default {
     NewTask,
     TasksList,
   },
+  mounted() {
+    this.getTasks();
+  },
   computed: {},
   methods: {
     receiveTask(taskName) {
-      this.tasks.push(taskName);
+      TaskService.addTask(taskName)
+        .then((response) => {
+          if (response) {
+            this.getTasks();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      //this.tasks.push(taskName);
     },
 
     addOnEnter(taskName) {
-      this.tasks.push(taskName);
+      TaskService.addTask(taskName)
+        .then((response) => {
+          if (response) {
+            this.getTasks();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     ifFound(status) {
       return this.tasks.find((item) => item.status == status);
+    },
+    getTasks() {
+      TaskService.fetchTasks()
+        .then((response) => {
+          this.tasks = response.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getUpdatedTasks() {
+      this.getTasks();
     },
   },
 };

@@ -14,16 +14,16 @@ export default {
   props: ["isDisabled", "taskName"],
   data() {
     return {
-      tempObject: { id: 0, name: "", status: "Incompleted" },
+      tempObject: { id: 0, name: "", status: "Incomplete" },
     };
   },
   methods: {
     addTask() {
       this.tempObject.name = this.taskName;
-      this.tempObject.id = this.tempObject.id + 1;
-      this.tempObject.status = "Incompleted";
+      //this.tempObject.id = this.tempObject.id + 1;
+      //this.tempObject.status = "Incomplete";
       this.$emit("emitTaskName", this.tempObject);
-      this.tempObject = { id: this.tempObject.id };
+      //this.tempObject = { id: this.tempObject.id };
     },
   },
 };

@@ -14,7 +14,7 @@ export default {
         task.previousStatus = task.status;
         task.status = "Removed";
       } else if (action === "Undo") {
-        task.status = "Incompleted";
+        task.status = "Incomplete";
       } else {
         task.status = action;
       }
