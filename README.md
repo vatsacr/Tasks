@@ -4,6 +4,11 @@
 ```
 npm install
 ```
+## To work with the existing backend
+```
+cd backend
+npm install
+```
 
 ### Compiles and hot-reloads for development
 ```
